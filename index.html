@@ -30,12 +30,26 @@
 #splashOverlay img{width:min(38vh,320px);height:auto;filter:drop-shadow(0 8px 24px rgba(0,0,0,.35))}
 #splashOverlay .brand{font:800 32px/1.2 system-ui,Segoe UI,Roboto,Poppins,sans-serif;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.25)}
 @keyframes fadeOut{to{opacity:0;visibility:hidden}}</style>
+<style>
+/* KIDS PRO UPGRADE: Animated Splash for Colorinka */
+#splashOverlay{position:fixed;inset:0;z-index:9999;background:linear-gradient(180deg,#4587FF 0%,#2ED5A2 100%);overflow:hidden;display:grid;place-items:center}
+#splashOverlay .logo{width:min(40vh,340px);height:min(40vh,340px);border-radius:22%;background:url('assets/icons/icon-512.png') center/cover no-repeat;
+  animation: logoPop .8s cubic-bezier(.2,.9,.2,1) both .2s, floatY 2.6s ease-in-out infinite 1.2s;}
+@keyframes logoPop{0%{transform:scale(.7);filter:blur(4px);opacity:0} 60%{transform:scale(1.06);filter:blur(0);opacity:1} 100%{transform:scale(1)}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+.star{position:absolute;width:10px;height:10px;border-radius:50%;opacity:.95}
+@keyframes starDrift{to{transform:translate(var(--dx),var(--dy)) rotate(180deg);opacity:0}}
+</style>
 </head>
 <body>
 
-<div id="splashOverlay" role="img" aria-label="Colorinka is loading">
-  <img src="assets/icons/icon-512.png" alt="Colorinka logo"/>
-  <div class="brand">Colorinka</div>
+<div id="splashOverlay" aria-label="Colorinka is loading">
+  <div class="logo" role="img" aria-label="Colorinka logo"></div>
+</div>
+
+
+
 </div> class="theme-candy">
   <div id="toasts" class="toasts"></div>
   <header class="topbar">
@@ -157,5 +171,39 @@ window.addEventListener('load',()=>{
   setTimeout(()=>{if(el){el.style.animation='fadeOut .5s ease forwards';setTimeout(()=>el.remove(),650)}},700);
 });
 </script>
+
+<script>
+/* KIDS PRO UPGRADE: splash animator */
+(function(){
+  const root = document.getElementById('splashOverlay');
+  if(root){
+    const colors = ['#FFD54F','#ffffff','#2ED5A2','#42A5F5'];
+    for(let i=0;i<36;i++){
+      const s=document.createElement('div');
+      s.className='star';
+      const c = colors[i%colors.length];
+      s.style.background=c;
+      const x = Math.random()*100, y=Math.random()*100;
+      s.style.left = x+'%'; s.style.top = y+'%';
+      const dx = (Math.random()*2-1)*120 + 'px';
+      const dy = (Math.random()*-160-40) + 'px';
+      s.style.setProperty('--dx', dx);
+      s.style.setProperty('--dy', dy);
+      const dur = 900 + Math.random()*1200;
+      s.style.animation = `starDrift ${dur}ms ease-out forwards ${Math.random()*800}ms`;
+      root.appendChild(s);
+    }
+    // Auto-hide splash
+    setTimeout(()=>{
+      root.style.transition='opacity .6s ease';
+      root.style.opacity='0';
+      setTimeout(()=> root.remove(), 700);
+    }, 2300);
+  }
+})();
+</script>
+
 </body>
 </html>
+
+<style>/* KIDS PRO UPGRADE */ .game-header,.header-bar{display:none!important}</style>
